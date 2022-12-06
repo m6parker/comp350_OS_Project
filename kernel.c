@@ -1,3 +1,6 @@
+// Mary Parker
+// Prisca Jean-Pierre
+
 void printString(char*);
 void printChar(char);
 void readString(char*);
