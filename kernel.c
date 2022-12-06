@@ -2,10 +2,10 @@
 // Prisca Jean-Pierre
 
 void printString(char*);
-void printChar(char);
 void readString(char*);
 void readSector(char*, int);
 void readFile(char*, char*, int*);
+void printChar(char);
 void executeProgram(char*);
 void terminate();
 void handleInterrupt21(int, int, int, int);
@@ -39,15 +39,6 @@ void main() {
 		interrupt(0x21, 0, "messag not found\r\n", 0, 0);  //no sectors read? then print an error
 	while(1);   //hang up
 */
-}
-
-void printString(char* chars) {
-	//if char not 0 call interrupt 21
-	while (*chars != 0x0) {
-		interrupt(0x10, 0xe*256+*chars, 0, 0, 0);
-		chars++;
-	}
-	//while(1){}
 }
 
 void printChar(char c) {
@@ -86,20 +77,13 @@ void readString(char* chars) {
 	}
 }
 
-void readSector(char* buffer, int sector) {
-//	interrupt(0x13, 0x2*256+1, buffer, 0*256+sector+1, 0*256+0x80);
-	int AH=2;
-        int AL=1;
-        int BX=buffer;
-        int CH=0;
-        int CL=sector+1;
-        int DH=0;
-        int DL=0x80;
-        int AX=AH*256+AL;
-        int CX=CH*256+CL;
-        int DX=DH*256+DL;
-        interrupt(0x13,AX,BX,CX,DX);
-
+void printString(char* chars) {
+	//if char not 0 call interrupt 21
+	while (*chars != 0x0) {
+		interrupt(0x10, 0xe*256+*chars, 0, 0, 0);
+		chars++;
+	}
+	//while(1){}
 }
 
 void readFile(char* filename, char* buffer, int* sectorsRead) {
@@ -152,6 +136,23 @@ void readFile(char* filename, char* buffer, int* sectorsRead) {
 		}
 	}
 }
+
+void readSector(char* buffer, int sector) {
+//	interrupt(0x13, 0x2*256+1, buffer, 0*256+sector+1, 0*256+0x80);
+	int AH=2;
+        int AL=1;
+        int BX=buffer;
+        int CH=0;
+        int CL=sector+1;
+        int DH=0;
+        int DL=0x80;
+        int AX=AH*256+AL;
+        int CX=CH*256+CL;
+        int DX=DH*256+DL;
+        interrupt(0x13,AX,BX,CX,DX);
+
+}
+
 
 void executeProgram(char* name) {
 	char buffer[13312];
