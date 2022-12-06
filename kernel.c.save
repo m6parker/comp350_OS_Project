@@ -1,0 +1,182 @@
+
+void printString(char*);
+void readString(char*);
+void printChar(char);
+void readSector(char*);
+void handleInterrupt21(int, int, int, int);
+void readFile(char*, char*, int*);
+void findFile();
+void executeProgram(char*);
+void terminate();
+//printChar for debugging
+int main(){
+	char buffer[13312];
+	char line[80];
+	int sectorsRead;
+	makeInterrupt21();
+//	interrupt 21 "hello world"
+//	interrupt21 ("another line")
+//	inter21,3,buffer,'messag',sectorsRead);
+
+//	readFile('tstpr1',buffer);
+
+//	readSector(buffer,30);
+//	printString(buffer);
+
+	makeInterrupt21();
+	interrupt(0x21,0,"hello world :)\n",0,0);
+	interrupt(0x21,0,"Enter a line>> ",0,0);
+	interrupt(0x21,4,'tstpr1',0,0);
+
+	readString(line);
+	printString(line);
+
+	interrupt(0x21,1,line,0,0);
+	interrupt(0x21,0,line,0,0);
+//	interrupt(0x21,2,buffer,30,0);
+//	interrupt(0x21,0,buffer,0,0);
+
+	int sectorsRead;
+	char* name = 'messag';
+	readFile(name, buffer, sectorsRead);
+	printString(buffer);
+
+	while(1){}//;
+}
+void readFile(char* name, char* buffer, int* s){
+	//1. find file
+	//2. read file
+	int entry;
+	int sector_index;
+	int sector_num;
+	int AX = 3;
+	char* BX = name;
+	int CX = buffer;
+	int DX = s;
+	char* dir[512];
+	readSector(dir, 2);
+	if( name[0] == dir[0 + entry] ){
+		if (name[1] == dir[1 + entry]){
+			if (name[2] == dir[2+entry]){
+				if (name[3] == dir[3+entry]){
+					if (name[4] == dir[4+entry]){
+						if (name[5]==dir[5+entry]){
+							//match
+							//findFile();
+							//for()
+	}}}}}}//all nested if statements
+	DX = 0; //setting sectors read to 0 bc none were found
+
+}
+void findFile(){
+/*
+	//int entry = 32;
+	int sector_num = entry + 6;
+	readSector(b, dir[sector_num]);
+	b=b+512;
+	*s = *s +1;
+	for(entry=0, entry<512, entry++){
+		//loop
+	}
+
+	if(entry == 512){
+		//print("found file");
+		return;
+	}
+	printString("found file\r\n")
+	for secindex=6 to26
+	  sec_num=dir[entry+secindex
+		if sec_num=0 -> 
+			break
+		readsec(buffer,sec_num);
+*/
+}
+void executeProgram(char* name){
+/*
+	readFile(name, buffer, s);
+	for(){
+		putInMemory();
+	}
+	launchProgram(0x2000);
+	AX = 4;
+	BX = name;
+*/
+}
+void terminate(){
+/*
+	//AX=5;
+	interrupt(0x21);
+	char shell[6];
+	shell[0]='s';
+	shell[1]='h';
+	shell[2]='e';
+	shell[6]='\0';
+	executeProgram(shell,0x2000);
+	while(1);
+*/
+}
+void printString(char* chars){
+	int i=0;
+	while(chars[i]!='\0')
+	printChar(chars[i++]);
+}
+void printChar(char c){
+	interrupt(0x10,0xe*256+c,0,0,0);
+}
+void readString(char* line){
+	// char array[80]
+	int i=0;
+	char c;
+	while(1){
+		c=interrupt(0x16,0,0,0,0);
+		//if backspace is pressed-->
+		if(c==0x8){
+			if(i>0){
+				i=i-1;
+				printChar(0x8);
+				printChar(' ');//to erase character from screen
+				printChar(0x8);
+				}
+			}
+		else if(c==0xd){//enter key is pressed
+			printChar(0xd);
+			printChar(0xa);
+			break;
+		}
+		else{
+			line[i++]=c;
+			printChar(c);
+		}
+	}
+	line[i++]=0xd;//enter key
+	line[i++]=0xa;//line feed
+	line[i++]=0x0;//end of string
+}
+
+void readSector(char* buffer, int sector){
+	int AH=2;
+	int AL=1;
+	int BX=buffer;
+	int CH=0;
+	int CL=sector+1;
+	int DH=0;
+	int DL=0x80;
+	int AX=AH*256+AL;
+	int CX=CH*256+CL;
+	int DX=DH*256+DL;
+	interrupt(0x13,AX,BX,CX,DX);
+}
+void handleInterrupt21(int ax, int bx, int cx, int dx){
+	if(ax==0){
+		printString(bx);
+	}
+	else if(ax==1){
+		readString(bx);
+	}
+	else if(ax==2){
+		readSector(bx,cx);
+	}
+	else
+		printString("idk");
+//		printString("an error occured maybe?");
+}
