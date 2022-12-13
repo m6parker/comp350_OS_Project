@@ -8,6 +8,7 @@ Project B - created kernel.c
   - echoed back strings
 
 Project C - created shell.c 
+Project D
   - can run commands: 
       - type file_name
       - exec program_name
@@ -19,5 +20,6 @@ Project E - update kernel and shell files
  - attempted killProcess()
  
  command line to verify:
+ 
  java -jar simulator.jar
  
