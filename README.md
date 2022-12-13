@@ -14,6 +14,8 @@ Project D
       - type file_name
       - exec program_name
       - dir command
+  - attempted deleteFile()
+  - attempted copy and create commands
       
 Project E - update kernel and shell files
  - attempted handleTimerInterrupt()
