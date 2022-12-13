@@ -19,5 +19,5 @@ Project E - update kernel and shell files
  - attempted killProcess()
  
  command line to verify:
- >> java -jar simulator.jar
+ java -jar simulator.jar
  
